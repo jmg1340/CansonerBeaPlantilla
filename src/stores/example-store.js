@@ -7,6 +7,7 @@ export const useCansoStore = defineStore('canso', {
     numeroCanso: "",
     idioma: "",
     titol: "",
+    audio: null,
     textLletra: "",
     lletra: [],
     objLletraAcordsEditat: {},
@@ -30,6 +31,7 @@ export const useCansoStore = defineStore('canso', {
     guardaNumeroCanso(text) { this.numeroCanso = text },
     guardaIdioma(text) { this.idioma = text },
     guardaTitol(text) { this.titol = text },
+    guardaAudio(text) { (text == null || text == "") ? null : this.audio = text },
 
     guardaCansonerBV( text ) { this.cansonerBV = text },
     guardaNumeroBV ( num ) { this.numeroBV = num },

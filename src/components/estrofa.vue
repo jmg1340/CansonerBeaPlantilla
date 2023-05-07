@@ -1,8 +1,13 @@
 <template>
   <!-- <pre>{{ estrofa }}</pre> -->
-  <div  :class="{'text-red': estrofa.tipus === 'tornada'}">
-    <div v-for="(objLinia, index) in estrofa.paragraf" :key="index">
-      <cmp_linia :linia="objLinia" :idxEstrofa="idxEstrofa" :idxLinia="index" />
+  <div class="row items-center" :class="{'text-red': estrofa.tipus === 'tornada'}">
+    <div class="col-auto q-pr-lg">
+      <q-checkbox v-model="estrofa.visibleAlsMusics" color="black" label="visible als músics" class="text-black"/>
+    </div>
+    <div class="col">
+      <div class="col" v-for="(objLinia, index) in estrofa.paragraf" :key="index">
+          <cmp_linia :linia="objLinia" :idxEstrofa="idxEstrofa" :idxLinia="index" />
+      </div>
     </div>
   </div>
 </template>

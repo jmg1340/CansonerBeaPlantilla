@@ -199,6 +199,22 @@ export default defineComponent({
 
         idCansoIdioma = objDades[arrTrobat[0][0] + "_" + arrTrobat[0][1]]
         console.log( "idCansoIdioma", idCansoIdioma)
+
+        store.guardaCansoner(cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].cansoner.nom)
+        store.guardaNumeroCanso(cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].cansoner.numero)
+        store.guardaIdioma( (() => {
+          switch ( idCansoIdioma.idioma ){
+            case "CAT":
+              return "catala"; break;
+            case "ES":
+              return "castella"; break;
+            default:
+              return ""
+          }
+        })())
+        store.guardaTitol(cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].titol)
+        store.guardaAudio ( cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].audio )
+
         arrLletra = cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].lletra
         console.log( "arrLletra", arrLletra)
 
@@ -224,6 +240,7 @@ export default defineComponent({
       })
 
       txtAreaLletra.value = txt.trim()
+      store.guardaTextLletra(txt.trim())
     }
 
 
@@ -241,29 +258,29 @@ export default defineComponent({
 
         linia = linia.replace(/[\t]+/g, '')  // treiem les \t si en te
         linia = linia.trim()
-        console.log("==========================")
-        console.log("LINIA: ", "'"+linia+"'")
+        // console.log("==========================")
+        // console.log("LINIA: ", "'"+linia+"'")
 
 
         if (index === arr.length - 1  ) {  // si és ultima linia
-          console.log("estic al ULTIM  element de arr i arrParagraf.length no és zero")
+          // console.log("estic al ULTIM  element de arr i arrParagraf.length no és zero")
           if (linia.length !== 0) arrParagraf.push({text: linia})
-          console.log("index:", index, "arrParagraf:", arrParagraf )
+          // console.log("index:", index, "arrParagraf:", arrParagraf )
           acc.push(arrParagraf)
           return acc
 
         } else if (linia.length !== 0) {
           arrParagraf.push({text: linia})
-          console.log("linia.length !== 0")
-          console.log("index:", index, "arrParagraf:", arrParagraf )
+          // console.log("linia.length !== 0")
+          // console.log("index:", index, "arrParagraf:", arrParagraf )
           return acc
 
         } else {
-          console.log("ELSE")
-          console.log("index:", index, "arrParagraf:", arrParagraf )
+          // console.log("ELSE")
+          // console.log("index:", index, "arrParagraf:", arrParagraf )
           if (arrParagraf.length !== 0) acc.push(arrParagraf)
           arrParagraf = []
-          console.log("index:", index, "arrParagraf:", arrParagraf )
+          // console.log("index:", index, "arrParagraf:", arrParagraf )
           return acc
         }
 
@@ -293,6 +310,7 @@ export default defineComponent({
 
         return {
           tipus: (arrParagraf.length !== 0   &&   arrParagraf[0].text.toLowerCase() === "t") ? "tornada" : "estrofa" ,
+          visibleAlsMusics: true,
           paragraf: arrP
         }
       })

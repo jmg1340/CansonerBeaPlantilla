@@ -1,25 +1,25 @@
 <template>
-  <div style="cursor: default">
+  <div class="column" style="cursor: default">
     <!-- <pre>{{ linia.acords }}</pre> -->
-    <div v-if="linia.acords" class="lletraAmpladaFixe" >
+    <div v-if="linia.acords" class="col lletraAmpladaFixe" >
       <!-- ACORDS -->
       <div class="row no-wrap">
-        <q-btn color="yellow-3" text-color="black" label="copia" class="col-1" dense size="xs" @click="store.guardaAcords(linia.acords)"/>
+        <q-btn color="yellow-3" text-color="black" label="copia" class="col-2" dense size="xs" @click="store.guardaAcords(linia.acords)"/>
         <div v-html="acordsText" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
       </div>
 
       <!-- LLETRA ACORDS -->
       <div class="row no-wrap">
-        <div class="col-1">&nbsp;</div>
-        <div class="col-auto q-ml-md" v-html="textAmbEspais" @click="activarRegistreAcords = true"/>
+        <div class="col-2">&nbsp;</div>
+        <div class="col-auto text-bold q-ml-md" v-html="textAmbEspais" @click="activarRegistreAcords = true"/>
       </div>
 
     </div>
-    <div v-else>
+    <div v-else class="col">
 
       <!-- LLETRA SENSE ACORDS -->
       <div class="row no-wrap">
-        <q-btn color="light-green-11" text-color="black" label="pega" class="col-1" dense size="xs" @click="linia.acords=store.acords" :disable="store.acords == null"/>
+        <q-btn color="light-green-11" text-color="black" label="pega" class="col-2" dense size="xs" @click="linia.acords=store.acords" :disable="store.acords == null"/>
         <div class="col-auto q-ml-md" @click="activarRegistreAcords = true">{{ linia.text}}</div>
       </div>
 
@@ -92,7 +92,7 @@ export default defineComponent({
         const textLength = linia.value.text.length
         // console.log(textLength)
 
-        let textAcords = " ".repeat(textLength + 8)
+        let textAcords = " ".repeat(textLength + 20)
         // console.log("textAcords", "[" + textAcords + "]")
 
         linia.value.acords.forEach( (obj, idx, matriu ) => {

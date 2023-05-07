@@ -14,6 +14,8 @@
 
             <q-input class="col q-mb-md" filled v-model="titol" label="Titol de la cançó:" @update:model-value="store.guardaTitol(titol)"/>
 
+            <!-- <q-input class="col q-mb-md" filled v-model="audio" label="Audio:" @update:model-value="store.guardaAudio(audio)"/> -->
+
           </div>
 
         </div>
@@ -38,9 +40,10 @@ export default defineComponent({
     const numeroCanso = ref(store.numeroCanso)
     const idioma = ref(store.idioma)
     const titol = ref(store.titol)
+    const audio = ref(store.audio)
 
 
-    return {cansoner, numeroCanso, titol, idioma, store}
+    return {cansoner, numeroCanso, titol, audio, idioma, store}
   }
 
 

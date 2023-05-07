@@ -1,6 +1,6 @@
   <template>
     <div class="column">
-      <div class="col q-mb-sm">
+      <!-- <div class="col q-mb-sm">
         <div class="row">
           <q-btn-toggle
             v-model="majuscules"
@@ -18,21 +18,52 @@
             ]"
           />
         </div>
-      </div>
+      </div> -->
 
 
+      <!-- ******  NOTES 1 ****** -->
       <div class="col q-mb-md">
-        <div class="row">
+        <div class="row q-mb-sm" style="cursor: default">
           <div
-            v-for="(obj, index) in notes"
+            v-for="(obj, index) in notes1"
             :key="'nota'+index"
             class="col-auto clNotes q-pa-sm"
-            :class="{'verd': obj.activat, 'gris': /b|#/.test(obj.nom) }"
+            :class="{'verd': obj.activat, 'gris': /b|#|mim|rem|lam|sim|fam/.test(obj.nom), 'q-ml-md': [2,6,9,12,15,19].includes(index) }"
             @click="activarDesactivar(obj)"
           >
-            {{ (majuscules) ?  obj.nom.toUpperCase().replace("B", "b") : obj.nom.toLowerCase() }}
+            <!-- {{ (majuscules) ?  obj.nom.toUpperCase().replace("B", "b") : obj.nom.toLowerCase() }} -->
+            {{ obj.nom }}
           </div>
         </div>
+
+      <!-- ******  NOTES 2 ****** -->
+      <div class="row q-mb-sm" style="cursor: default">
+          <div
+            v-for="(obj, index) in notes2"
+            :key="'nota'+index"
+            class="col-auto clNotes q-pa-sm"
+            :class="{'verd': obj.activat, 'gris': /b|#/.test(obj.nom), 'q-ml-md': [2,5,7,9,12,15].includes(index) }"
+            @click="activarDesactivar(obj)"
+          >
+            <!-- {{ (majuscules) ?  obj.nom.toUpperCase().replace("B", "b") : obj.nom.toLowerCase() }} -->
+            {{ obj.nom }}
+          </div>
+        </div>
+
+      <!-- ******  NOTES 3 ****** -->
+      <div class="row q-mb-sm" style="cursor: default">
+          <div
+            v-for="(obj, index) in notes3"
+            :key="'nota'+index"
+            class="col-auto clNotes q-pa-sm"
+            :class="{'verd': obj.activat, 'gris': /b|#/.test(obj.nom)}"
+            @click="activarDesactivar(obj)"
+          >
+            <!-- {{ (majuscules) ?  obj.nom.toUpperCase().replace("B", "b") : obj.nom.toLowerCase() }} -->
+            {{ obj.nom }}
+          </div>
+        </div>
+
 
 
       </div>
@@ -90,32 +121,88 @@
     setup(props){
       const store = useCansoStore()
 
-      const majuscules = ref(true)
+      // const majuscules = ref(true)
 
-      const notes = ref([
-        { nom: "Do", activat: false},
-        { nom: "Do#", activat: false},
-        { nom: "Re", activat: false},
-        { nom: "Re#", activat: false},
-        { nom: "Reb", activat: false},
-        { nom: "Mi", activat: false},
-        { nom: "Mib", activat: false},
-        { nom: "Fa", activat: false},
-        { nom: "Fa#", activat: false},
-        { nom: "Sol", activat: false},
-        { nom: "Sol#", activat: false},
-        { nom: "Solb", activat: false},
-        { nom: "La", activat: false},
-        { nom: "La#", activat: false},
-        { nom: "Lab", activat: false},
-        { nom: "Si", activat: false},
-        { nom: "Sib", activat: false},
+      // const notes = ref([
+      //   { nom: "Do", activat: false},
+      //   { nom: "Do#", activat: false},
+      //   { nom: "Re", activat: false},
+      //   { nom: "Re#", activat: false},
+      //   { nom: "Reb", activat: false},
+      //   { nom: "Mi", activat: false},
+      //   { nom: "Mib", activat: false},
+      //   { nom: "Fa", activat: false},
+      //   { nom: "Fa#", activat: false},
+      //   { nom: "Sol", activat: false},
+      //   { nom: "Sol#", activat: false},
+      //   { nom: "Solb", activat: false},
+      //   { nom: "La", activat: false},
+      //   { nom: "La#", activat: false},
+      //   { nom: "Lab", activat: false},
+      //   { nom: "Si", activat: false},
+      //   { nom: "Sib", activat: false},
+      //   { nom: "-", activat: false},
+      //   { nom: "7", activat: false},
+      //   { nom: "(", activat: false},
+      //   { nom: ")", activat: false}
+      // ])
+
+      const notes1 = ref([
+        { nom: "do", activat: false},
+        { nom: "do#", activat: false},
+        { nom: "re", activat: false},
+        { nom: "re#", activat: false},
+        { nom: "rem", activat: false},
+        { nom: "reb", activat: false},
+        { nom: "mi", activat: false},
+        { nom: "mib", activat: false},
+        { nom: "mim", activat: false},
+        { nom: "fa", activat: false},
+        { nom: "fa#", activat: false},
+        { nom: "fam", activat: false},
+        { nom: "sol", activat: false},
+        { nom: "sol#", activat: false},
+        { nom: "solb", activat: false},
+        { nom: "la", activat: false},
+        { nom: "la#", activat: false},
+        { nom: "lam", activat: false},
+        { nom: "lab", activat: false},
+        { nom: "si", activat: false},
+        { nom: "sib", activat: false},
+        { nom: "sim", activat: false}
+      ])
+
+      const notes2 = ref([
+        { nom: "DO", activat: false},
+        { nom: "DO#", activat: false},
+        { nom: "RE", activat: false},
+        { nom: "RE#", activat: false},
+        { nom: "REb", activat: false},
+        { nom: "MI", activat: false},
+        { nom: "MIb", activat: false},
+        { nom: "FA", activat: false},
+        { nom: "FA#", activat: false},
+        { nom: "SOL", activat: false},
+        { nom: "SOL#", activat: false},
+        { nom: "SOLb", activat: false},
+        { nom: "LA", activat: false},
+        { nom: "LA#", activat: false},
+        { nom: "LAb", activat: false},
+        { nom: "SI", activat: false},
+        { nom: "SIb", activat: false}
+      ])
+
+      const notes3 = ref([
         { nom: "-", activat: false},
+        { nom: "m", activat: false},
+        { nom: "M", activat: false},
         { nom: "7", activat: false},
         { nom: "(", activat: false},
         { nom: ")", activat: false}
       ])
 
+
+      const notes = ref(notes1.value.concat(notes2.value.concat(notes3.value)))
 
 
       const linia = props.linia
@@ -131,7 +218,7 @@
       */
       const acords = computed( () => {
         console.log("--- ACORDS COMPUTED ---")
-        let txtAcords = " ".repeat(text.length + 8)
+        let txtAcords = " ".repeat(text.length + 20)
 
         notesAssignades.value.forEach( (obj, idx, matriu ) => {
           const arr = txtAcords.split("")
@@ -179,11 +266,12 @@
         if (notaActiva){
           //assignació de la nota. Entrada
           notesAssignades.value.push({
-            nota: (majuscules.value) ? notaActiva.nom.toUpperCase().replace("B", "b") : notaActiva.nom.toLowerCase(),
+            // nota: (majuscules.value) ? notaActiva.nom.toUpperCase().replace("B", "b") : notaActiva.nom.toLowerCase(),
+            nota: notaActiva.nom,
             pos: idx
           })
 
-          notaActiva.activat = false
+          // notaActiva.activat = false
 
         } else if ( notesAssignades.value.some( (obj) => obj.pos == idx)) {
           // si existeix una nota a la posició clicada, la treiem.
@@ -207,7 +295,7 @@
 
 
 
-      return { notes, text, activarDesactivar, acords, assignarNota, majuscules }
+      return { notes1, notes2, notes3, text, activarDesactivar, acords, assignarNota }
     }
 
 
@@ -220,9 +308,11 @@
   <style>
     .lletra{
       font-family: 'Courier New', Courier, monospace;
+      font-size: large;
       border: 1px solid rgb(207, 207, 207);
-      width: 15px;
+      width: 20px;
       text-align: center;
+      cursor: default;
     }
     .clNotes{
       font-family: 'Courier New', Courier, monospace;
@@ -232,7 +322,7 @@
 
 
     .gris {
-      background-color: darkgrey;
+      background-color: rgb(214, 214, 214);
     }
     .verd {
       background-color: rgb(128, 255, 0);

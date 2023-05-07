@@ -2,13 +2,14 @@
   <q-page class="">
 
     <div class="row q-ma-sm q-gutter-md">
-      <div class="col ">
+      <!-- <div class="col"> -->
         <!-- <q-bar class="row items-between bg-grey-2"> -->
           <!-- <div class="col text-right"> -->
-            <q-btn class="q-mx-sm" color="orange-10" label="Copiar." noCaps @click="copiar"/>
+            <q-btn class="col-auto q-mx-sm" color="orange-10" :class="{'text-negative': modeCopiarJordi}" label="Copiar" noCaps @click="copiar"/>
+            <q-card class="col q-pa-md" @dblclick="modeCopiarJordi = !modeCopiarJordi" :class="{'text-negative': modeCopiarJordi}">Anar enganxant el que es va copiant en un fitxer creat amb el Bloc de Notas. Quan estigui llest (quan us canseu, vaja...) l'envieu per email al Jordi (jordi.miserachs@gmail.com)</q-card>
           <!-- </div> -->
         <!-- </q-bar> -->
-      </div>
+      <!-- </div> -->
     </div>
 
 
@@ -53,13 +54,23 @@ export default defineComponent({
     const objCanso = ref({})
     objCanso.value[store.idioma] = {
       titol: store.titol,
+      audio: store.audio,
       lletra: store.lletra
     }
+
+    const modeCopiarJordi = ref(false)
 
 
     const copiar = () => {
       let strPRE = document.querySelector('pre').innerHTML
       strPRE = strPRE.replace(/&amp;/g, "&")
+
+      if ( modeCopiarJordi.value ){
+        const idxPrimerCorxet = strPRE.indexOf("{")
+        const idxUltimCorxet = strPRE.lastIndexOf("}")
+
+        strPRE = strPRE.substring(idxPrimerCorxet + 2, idxUltimCorxet)
+      }
 
       copyToClipboard(strPRE)
       .then(() => {
@@ -78,7 +89,8 @@ export default defineComponent({
     return {
       objCanso,
       copiar,
-      store
+      store,
+      modeCopiarJordi
     }
   }
 })
