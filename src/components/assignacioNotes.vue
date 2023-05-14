@@ -63,31 +63,47 @@
             {{ obj.nom }}
           </div>
         </div>
-
-
-
       </div>
+
+
+
+      <!-- ACORDS PER SOBRE LA LINIA DE TEXT DE LA LLETRA -->
       <div class="col">
         <div class="row justify-start">
           <div
-            v-for="(caracter, index) in acords"
+            v-for="(caracter, index) in txtAcordsASobre"
             :key="'espai'+index"
             class="colxx lletra"
-            @click="assignarNota(index)"
+            @click="assignarNota(index, 'sobre')"
           >
             {{  caracter.replace(" ", "&nbsp;") }}
           </div>
         </div>
-
       </div>
+
+      <!-- TEXT DE LA LINIA DE LA LLETRA -->
       <div class="col">
         <div class="row justify-start">
           <div class="colxx lletra" v-for="(caracter, index) in text" :key="'text'+index">
             {{ caracter }}
           </div>
         </div>
-
       </div>
+
+      <!-- ACORDS PER SOTA DE LA LINIA DE TEXT DE LA LLETRA -->
+      <div class="col">
+        <div class="row justify-start">
+          <div
+            v-for="(caracter, index) in txtAcordsASota"
+            :key="'espai'+index"
+            class="colxx lletra"
+            @click="assignarNota(index, 'sota')"
+          >
+            {{  caracter.replace(" ", "&nbsp;") }}
+          </div>
+        </div>
+      </div>
+
 
 
     </div>
@@ -209,18 +225,30 @@
       const text = linia.text
 
       console.log("linia", linia)
-      const notesAssignades = ref( linia.acords || [])
-      console.log("notesAssignades:", notesAssignades.value)
+      const notesAssignadesASobre = ref( linia.acordsASobre || [])
+      const notesAssignadesASota = ref( linia.acordsASota || [])
+
+      // console.log("notesAssignades:", notesAssignades.value)
+
+
+      const txtAcordsASobre = computed ( () => {
+        return transformacioArrAcordsAText ( notesAssignadesASobre.value )
+      })
+
+      const txtAcordsASota = computed ( () => {
+        return transformacioArrAcordsAText ( notesAssignadesASota.value )
+      })
+
 
 
       /*
       * Descripcio: transforma el array de les notes a text
       */
-      const acords = computed( () => {
-        console.log("--- ACORDS COMPUTED ---")
+      const transformacioArrAcordsAText = ( arrAcords) => {
+        console.log("--- transformacioArrAcordsAText ---")
         let txtAcords = " ".repeat(text.length + 20)
 
-        notesAssignades.value.forEach( (obj, idx, matriu ) => {
+        arrAcords.forEach( (obj, idx, matriu ) => {
           const arr = txtAcords.split("")
           // console.log("arr", arr)
 
@@ -240,7 +268,7 @@
 
         console.log( 'txtAcords', txtAcords )
         return txtAcords
-      })
+      }
 
 
 
@@ -256,12 +284,12 @@
 
       /*
       * Descripcio: assignacio de notes segons al posicio del text.
-      *             Construccio de l'array de les notes
+      *             Construccio de l'array dels acords
       */
-      const assignarNota = (idx) => {
+      const assignarNota = (idx, sobreSota) => {
         // seleccionem la nota que esta activa
         const notaActiva = notes.value.find( objNota => objNota.activat === true)
-
+        const notesAssignades = (sobreSota === "sobre") ? notesAssignadesASobre : notesAssignadesASota
 
         if (notaActiva){
           //assignació de la nota. Entrada
@@ -284,18 +312,32 @@
 
 
 
-      watch( notesAssignades, (newNA, oldNA) => {
-        console.log("--- WATCH newNA---")
-        console.log(notesAssignades.value)
-        store.modificarLletraAcordsEditat({
-          text: linia.text,
-          acords: notesAssignades.value
-        })
+      watch( notesAssignadesASobre, (newNA, oldNA) => {
+        console.log("--- WATCH notesAssignadesASobre---")
+        // console.log(notesAssignades.value)
+        const obj = {}
+        obj.text = linia.text
+        if (notesAssignadesASobre.value.length !== 0) obj.acordsASobre = notesAssignadesASobre.value
+        if (notesAssignadesASota.value.length !== 0) obj.acordsASota = notesAssignadesASota.value
+
+        store.modificarLletraAcordsEditat( obj )
+      }, { deep: true })
+
+
+      watch( notesAssignadesASota, (newNA, oldNA) => {
+        console.log("--- WATCH notesAssignadesASota---")
+        // console.log(notesAssignades.value)
+        const obj = {}
+        obj.text = linia.text
+        if (notesAssignadesASobre.value.length !== 0) obj.acordsASobre = notesAssignadesASobre.value
+        if (notesAssignadesASota.value.length !== 0) obj.acordsASota = notesAssignadesASota.value
+
+        store.modificarLletraAcordsEditat( obj )
       }, { deep: true })
 
 
 
-      return { notes1, notes2, notes3, text, activarDesactivar, acords, assignarNota }
+      return { notes1, notes2, notes3, text, activarDesactivar, txtAcordsASobre, txtAcordsASota, assignarNota }
     }
 
 

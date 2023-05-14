@@ -1,25 +1,76 @@
 <template>
   <div class="column" style="cursor: default">
     <!-- <pre>{{ linia.acords }}</pre> -->
-    <div v-if="linia.acords" class="col lletraAmpladaFixe" >
-      <!-- ACORDS -->
+
+
+    <!-- QUAN LA LINIA DE LA LLETRA, APART DEL TEXT, TE ACORDS PER SOBRE I PER SOTA (D'AQUESTA LINIA)-->
+
+    <div v-if="linia.acordsASobre && linia.acordsASota" class="col lletraAmpladaFixe" >
+      <!-- ACORDS PER SOBRE-->
       <div class="row no-wrap">
         <q-btn color="yellow-3" text-color="black" label="copia" class="col-2" dense size="xs" @click="store.guardaAcords(linia.acords)"/>
-        <div v-html="acordsText" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
+        <div v-html="acordsTextASobre" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
       </div>
 
-      <!-- LLETRA ACORDS -->
+      <!-- LLETRA -->
+      <div class="row no-wrap">
+        <div class="col-2">&nbsp;</div>
+        <div class="col-auto text-bold q-ml-md" v-html="textAmbEspais" @click="activarRegistreAcords = true"/>
+      </div>
+
+      <!-- ACORDS PER SOTA-->
+      <div class="row no-wrap">
+        <div class="col-2"/>
+        <div v-html="acordsTextASota" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
+      </div>
+
+    </div>
+
+
+
+   <!-- QUAN LA LINIA DE LA LLETRA NOMES TE ACORDS PER SOBRE (D'AQUESTA LINIA)-->
+
+   <div v-else-if="linia.acordsASobre" class="col lletraAmpladaFixe" >
+      <!-- ACORDS PER SOBRE-->
+      <div class="row no-wrap">
+        <q-btn color="yellow-3" text-color="black" label="copia" class="col-2" dense size="xs" @click="store.guardaAcords(linia.acordsASobre)"/>
+        <div v-html="acordsTextASobre" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
+      </div>
+
+      <!-- LLETRA  -->
       <div class="row no-wrap">
         <div class="col-2">&nbsp;</div>
         <div class="col-auto text-bold q-ml-md" v-html="textAmbEspais" @click="activarRegistreAcords = true"/>
       </div>
 
     </div>
+
+
+   <!-- QUAN LA LINIA DE LA LLETRA NOMES TE ACORDS PER SOTA (D'AQUESTA LINIA)-->
+
+   <div v-else-if="linia.acordsASota" class="col lletraAmpladaFixe" >
+      <!-- LLETRA  -->
+      <div class="row no-wrap">
+        <div class="col-2">&nbsp;</div>
+        <div class="col-auto text-bold q-ml-md" v-html="textAmbEspais" @click="activarRegistreAcords = true"/>
+      </div>
+
+      <!-- ACORDS PER SOTA-->
+      <div class="row no-wrap">
+        <div class="col-2"/>
+        <!-- <q-btn color="yellow-3" text-color="black" label="copia" class="col-2" dense size="xs" @click="store.guardaAcords(linia.acords)"/> -->
+        <div v-html="acordsTextASota" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
+      </div>
+
+
+    </div>
+
+
     <div v-else class="col">
 
       <!-- LLETRA SENSE ACORDS -->
       <div class="row no-wrap">
-        <q-btn color="light-green-11" text-color="black" label="pega" class="col-2" dense size="xs" @click="linia.acords=store.acords" :disable="store.acords == null"/>
+        <q-btn color="light-green-11" text-color="black" label="pega" class="col-2" dense size="xs" @click="linia.acordsASobre=store.acords" :disable="store.acords == null"/>
         <div class="col-auto q-ml-md" @click="activarRegistreAcords = true">{{ linia.text}}</div>
       </div>
 
@@ -86,16 +137,23 @@ export default defineComponent({
 
     const textAmbEspais = computed ( () => linia.value.text.replaceAll(" ", "&nbsp;"))
 
-    const acordsText = computed ( () => {
+    const acordsTextASobre = computed ( () => {
+      return transformarArrayAcordsAText( linia.value.acordsASobre )
+    })
+    const acordsTextASota = computed ( () => {
+      return transformarArrayAcordsAText( linia.value.acordsASota )
+    })
 
-      if (linia.value.acords !== undefined) {
+    const transformarArrayAcordsAText = (arrAcords) => {
+
+      if (arrAcords !== undefined) {
         const textLength = linia.value.text.length
         // console.log(textLength)
 
         let textAcords = " ".repeat(textLength + 20)
         // console.log("textAcords", "[" + textAcords + "]")
 
-        linia.value.acords.forEach( (obj, idx, matriu ) => {
+        arrAcords.forEach( (obj, idx, matriu ) => {
           const arr = textAcords.split("")
           // console.log("arr", arr)
 
@@ -113,13 +171,13 @@ export default defineComponent({
         })
 
         // console.log("textAcords", "[" + textAcords + "]")
-        // console.log("textAcords.length", textAcords.length)
+        console.log("textAcords.length", textAcords.length)
         return textAcords.replaceAll(" ", "&nbsp;")
 
       } else {
         return null
       }
-    })
+    }
 
 
     const mGuardarLletraAcords = () => {
@@ -138,7 +196,8 @@ export default defineComponent({
     return {
       linia,
       textAmbEspais,
-      acordsText,
+      acordsTextASobre,
+      acordsTextASota,
       activarRegistreAcords,
       idxEstrofa,
       idxLinia,
