@@ -82,19 +82,39 @@
 
 
   <q-dialog v-model="activarRegistreAcords" persistent transition-show="flip-down" full-width>
-      <q-card>
-        <q-card-section>
-          <cmp_assignacioNotes :linia="linia" :idxEstrofa="idxEstrofa" :idxLinia="idxLinia"  />
-        </q-card-section>
+    <q-card>
+      <q-card-section>
+        <cmp_assignacioNotes :linia="linia" :idxEstrofa="idxEstrofa" :idxLinia="idxLinia"  />
+      </q-card-section>
 
-        <q-card-actions align="right">
+      <q-card-actions align="between">
+        <q-btn flat label="Editar lletra" color="teal" @click="prompt=true" />
+        <div>
           <q-btn flat label="Guardar" color="primary" @click="mGuardarLletraAcords" v-close-popup/>
           <q-btn flat label="Cancelar" color="negative" v-close-popup />
+        </div>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+
+
+  <q-dialog v-model="prompt" persistent>
+      <q-card style="min-width: 100%">
+        <q-card-section>
+          <div class="text-h6">Edicio lletra de la línia</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-input dense v-model="linia.text" autofocus @keyup.enter="prompt = false" />
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Ok" v-close-popup />
+          <!-- <q-btn flat label="Add address" v-close-popup /> -->
         </q-card-actions>
       </q-card>
     </q-dialog>
-
-
 
 </template>
 
@@ -102,7 +122,7 @@
 import { defineComponent, ref, computed } from 'vue'
 import cmp_assignacioNotes from './assignacioNotes.vue'
 import { useCansoStore } from '../stores/example-store'
-
+import { useQuasar } from 'quasar'
 
 export default defineComponent({
   name: 'liniaTextAcords',
@@ -123,12 +143,16 @@ export default defineComponent({
   },
 
   setup( props ){
+    const $q = useQuasar()
     const store = useCansoStore()
 
     // const linia = {
     //   acords: [ { nota: "Do", pos: 4},{ nota: "Si", pos: 10},{ nota: "La", pos: 20}],
     //   text: "paragraf 1.            text de la linia numero 1"
     // }
+
+    const prompt = ref( false )
+
     const activarRegistreAcords = ref(false)
 
     const linia = ref(props.linia)
@@ -203,7 +227,8 @@ export default defineComponent({
       idxLinia,
       store,
       mGuardarLletraAcords,
-      eliminarAcords
+      eliminarAcords,
+      prompt
     }
 
   }

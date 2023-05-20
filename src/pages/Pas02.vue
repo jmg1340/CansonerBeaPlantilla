@@ -257,7 +257,7 @@ export default defineComponent({
       let arrParagrafs = arrTxtArea.reduce ( (acc, linia, index, arr) =>{
 
         linia = linia.replace(/[\t]+/g, '')  // treiem les \t si en te
-        linia = linia.trim()
+        linia = linia.trimEnd()
         // console.log("==========================")
         // console.log("LINIA: ", "'"+linia+"'")
 

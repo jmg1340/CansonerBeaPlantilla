@@ -68,7 +68,7 @@
 
 
       <!-- ACORDS PER SOBRE LA LINIA DE TEXT DE LA LLETRA -->
-      <div class="col">
+      <div class="col q-mb-xs">
         <div class="row justify-start">
           <div
             v-for="(caracter, index) in txtAcordsASobre"
@@ -82,9 +82,9 @@
       </div>
 
       <!-- TEXT DE LA LINIA DE LA LLETRA -->
-      <div class="col">
+      <div class="col q-mb-xs">
         <div class="row justify-start">
-          <div class="colxx lletra" v-for="(caracter, index) in text" :key="'text'+index">
+          <div class="colxx lletra" v-for="(caracter, index) in linia.text" :key="'text'+index">
             {{ caracter }}
           </div>
         </div>
@@ -213,6 +213,7 @@
         { nom: "m", activat: false},
         { nom: "M", activat: false},
         { nom: "7", activat: false},
+        { nom: "4", activat: false},
         { nom: "(", activat: false},
         { nom: ")", activat: false}
       ])
@@ -221,12 +222,12 @@
       const notes = ref(notes1.value.concat(notes2.value.concat(notes3.value)))
 
 
-      const linia = props.linia
-      const text = linia.text
+      const linia = ref( props.linia )
+      // let text = linia.value.text
 
       console.log("linia", linia)
-      const notesAssignadesASobre = ref( linia.acordsASobre || [])
-      const notesAssignadesASota = ref( linia.acordsASota || [])
+      const notesAssignadesASobre = ref( linia.value.acordsASobre || [])
+      const notesAssignadesASota = ref( linia.value.acordsASota || [])
 
       // console.log("notesAssignades:", notesAssignades.value)
 
@@ -246,7 +247,7 @@
       */
       const transformacioArrAcordsAText = ( arrAcords) => {
         console.log("--- transformacioArrAcordsAText ---")
-        let txtAcords = " ".repeat(text.length + 20)
+        let txtAcords = " ".repeat(linia.value.text.length + 20)
 
         arrAcords.forEach( (obj, idx, matriu ) => {
           const arr = txtAcords.split("")
@@ -316,7 +317,7 @@
         console.log("--- WATCH notesAssignadesASobre---")
         // console.log(notesAssignades.value)
         const obj = {}
-        obj.text = linia.text
+        obj.text = linia.value.text
         if (notesAssignadesASobre.value.length !== 0) obj.acordsASobre = notesAssignadesASobre.value
         if (notesAssignadesASota.value.length !== 0) obj.acordsASota = notesAssignadesASota.value
 
@@ -328,7 +329,7 @@
         console.log("--- WATCH notesAssignadesASota---")
         // console.log(notesAssignades.value)
         const obj = {}
-        obj.text = linia.text
+        obj.text = linia.value.text
         if (notesAssignadesASobre.value.length !== 0) obj.acordsASobre = notesAssignadesASobre.value
         if (notesAssignadesASota.value.length !== 0) obj.acordsASota = notesAssignadesASota.value
 
@@ -336,8 +337,16 @@
       }, { deep: true })
 
 
+      // watch( linia, (newNA, oldNA) => {
+      //   console.log("--- WATCH linia ---")
+      //   text = linia.value.text
+      //   console.log("text", text)
 
-      return { notes1, notes2, notes3, text, activarDesactivar, txtAcordsASobre, txtAcordsASota, assignarNota }
+      // }, { deep: true })
+
+
+
+      return { notes1, notes2, notes3, linia, activarDesactivar, txtAcordsASobre, txtAcordsASota, assignarNota }
     }
 
 
