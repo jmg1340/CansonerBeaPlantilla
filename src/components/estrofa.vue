@@ -2,11 +2,21 @@
   <!-- <pre>{{ estrofa }}</pre> -->
   <div class="row items-center" :class="{'text-red': estrofa.tipus === 'tornada'}">
     <div class="col-auto q-pr-lg">
-      <q-checkbox v-model="estrofa.visibleAlsMusics" color="black" label="visible als músics" class="text-black"/>
+      <div class="column">
+        <q-radio class="col" dense v-model="estrofa.visibleAlsMusics" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" :val="true" label="Visible" />
+        <q-radio class="col" dense v-model="estrofa.visibleAlsMusics" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" :val="1" label="Visible 1ª linia" />
+        <q-radio class="col" dense v-model="estrofa.visibleAlsMusics" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" :val="false" label="NO visible" />
+
+      </div>
+      <!-- <q-checkbox v-model="estrofa.visibleAlsMusics" color="black" label="visible als músics" class="text-black"/> -->
+
+
     </div>
     <div class="col">
       <div class="col" v-for="(objLinia, index) in estrofa.paragraf" :key="index">
-          <cmp_linia :linia="objLinia" :idxEstrofa="idxEstrofa" :idxLinia="index" />
+          <cmp_linia :linia="objLinia" :idxEstrofa="idxEstrofa" :idxLinia="index"
+          v-if="estrofa.visibleAlsMusics === 1 && index === 0 || estrofa.visibleAlsMusics === true"
+          />
       </div>
     </div>
   </div>

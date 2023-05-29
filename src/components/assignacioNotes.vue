@@ -75,6 +75,7 @@
             :key="'espai'+index"
             class="colxx lletra"
             @click="assignarNota(index, 'sobre')"
+            @dblclick="eliminarNota(index, 'sobre')"            
           >
             {{  caracter.replace(" ", "&nbsp;") }}
           </div>
@@ -98,6 +99,7 @@
             :key="'espai'+index"
             class="colxx lletra"
             @click="assignarNota(index, 'sota')"
+            @dblclick="eliminarNota(index, 'sota')"            
           >
             {{  caracter.replace(" ", "&nbsp;") }}
           </div>
@@ -185,6 +187,7 @@
         { nom: "lab", activat: false},
         { nom: "si", activat: false},
         { nom: "sib", activat: false},
+        { nom: "si#", activat: false},
         { nom: "sim", activat: false}
       ])
 
@@ -210,10 +213,20 @@
 
       const notes3 = ref([
         { nom: "-", activat: false},
+        { nom: "+", activat: false},
+        { nom: "x", activat: false},
+        { nom: "/", activat: false},
         { nom: "m", activat: false},
+        { nom: "sus", activat: false},
+        { nom: "dism", activat: false},
+        { nom: "G", activat: false},
         { nom: "M", activat: false},
-        { nom: "7", activat: false},
+        { nom: "2", activat: false},
+        { nom: "3", activat: false},
         { nom: "4", activat: false},
+        { nom: "6", activat: false},
+        { nom: "7", activat: false},
+        { nom: "9", activat: false},
         { nom: "(", activat: false},
         { nom: ")", activat: false}
       ])
@@ -302,15 +315,21 @@
 
           // notaActiva.activat = false
 
-        } else if ( notesAssignades.value.some( (obj) => obj.pos == idx)) {
-          // si existeix una nota a la posició clicada, la treiem.
-          // console.log("nota a treure de la llista:", notesAssignades.value.find( obj => obj.pos == idx))
-          notesAssignades.value = notesAssignades.value.filter( obj => obj.pos != idx)
         }
         // console.log( 'notesAssignades', notesAssignades.value)
 
       }
 
+      
+      const eliminarNota = ( idx, sobreSota) => {
+        const notesAssignades = (sobreSota === "sobre") ? notesAssignadesASobre : notesAssignadesASota
+
+        if ( notesAssignades.value.some( (obj) => obj.pos == idx)) {
+          // si existeix una nota a la posició clicada, la treiem.
+          // console.log("nota a treure de la llista:", notesAssignades.value.find( obj => obj.pos == idx))
+          notesAssignades.value = notesAssignades.value.filter( obj => obj.pos != idx)
+        }
+      }
 
 
       watch( notesAssignadesASobre, (newNA, oldNA) => {
@@ -346,7 +365,7 @@
 
 
 
-      return { notes1, notes2, notes3, linia, activarDesactivar, txtAcordsASobre, txtAcordsASota, assignarNota }
+      return { notes1, notes2, notes3, linia, activarDesactivar, txtAcordsASobre, txtAcordsASota, assignarNota, eliminarNota }
     }
 
 

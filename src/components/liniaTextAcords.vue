@@ -9,7 +9,7 @@
       <!-- ACORDS PER SOBRE-->
       <div class="row no-wrap">
         <q-btn color="yellow-3" text-color="black" label="copia" class="col-2" dense size="xs" @click="store.guardaAcords(linia.acords)"/>
-        <div v-html="acordsTextASobre" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
+        <div v-html="acordsTextASobre" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords('acordsASobre')"/>
       </div>
 
       <!-- LLETRA -->
@@ -21,7 +21,7 @@
       <!-- ACORDS PER SOTA-->
       <div class="row no-wrap">
         <div class="col-2"/>
-        <div v-html="acordsTextASota" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
+        <div v-html="acordsTextASota" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords('acordsASota')"/>
       </div>
 
     </div>
@@ -34,7 +34,7 @@
       <!-- ACORDS PER SOBRE-->
       <div class="row no-wrap">
         <q-btn color="yellow-3" text-color="black" label="copia" class="col-2" dense size="xs" @click="store.guardaAcords(linia.acordsASobre)"/>
-        <div v-html="acordsTextASobre" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
+        <div v-html="acordsTextASobre" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords('acordsASobre')"/>
       </div>
 
       <!-- LLETRA  -->
@@ -59,7 +59,7 @@
       <div class="row no-wrap">
         <div class="col-2"/>
         <!-- <q-btn color="yellow-3" text-color="black" label="copia" class="col-2" dense size="xs" @click="store.guardaAcords(linia.acords)"/> -->
-        <div v-html="acordsTextASota" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords"/>
+        <div v-html="acordsTextASota" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords('acordsASota')"/>
       </div>
 
 
@@ -213,8 +213,10 @@ export default defineComponent({
 
 
 
-    const eliminarAcords = () => {
-      store.eliminaAcords ( idxEstrofa, idxLinia )
+    const eliminarAcords = (acordsASobreASota) => {
+      console.log( "estic a eliminar Acords")
+      console.log( idxEstrofa, idxLinia, acordsASobreASota )
+      store.eliminaAcords ( idxEstrofa, idxLinia, acordsASobreASota )
     }
 
     return {

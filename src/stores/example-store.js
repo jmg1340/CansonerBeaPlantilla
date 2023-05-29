@@ -37,7 +37,7 @@ export const useCansoStore = defineStore('canso', {
     guardaNumeroBV ( num ) { this.numeroBV = num },
 
     guardaAcords ( acordsCopiats ) { this.acords = acordsCopiats },
-    eliminaAcords ( idxEstrofa, idxLinia ) { delete this.lletra[idxEstrofa].paragraf[idxLinia].acords },
+    eliminaAcords ( idxEstrofa, idxLinia, acordsASobreASota ) { delete this.lletra[idxEstrofa].paragraf[idxLinia][acordsASobreASota] },
 
     guardaTextLletra(text) { this.textLletra = text },
     guardaArrLletra(arr) { this.lletra = arr },

@@ -182,6 +182,22 @@ export default defineComponent({
 
             idCansoIdioma = objDades[arrTrobat[0][0] + "_" + arrTrobat[0][1]]
             console.log( "idCansoIdioma", idCansoIdioma)
+
+            store.guardaCansoner(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.nom)
+            store.guardaNumeroCanso(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.numero)
+            store.guardaIdioma( (() => {
+              switch ( idioma2 ){
+                case "CAT":
+                  return "catala"; break;
+                case "ES":
+                  return "castella"; break;
+                default:
+                  return ""
+              }
+            })() )
+            store.guardaTitol( cansonerBVjs[idCansoIdioma.idCanso][idioma2].titol)
+            store.guardaAudio ( cansonerBVjs[idCansoIdioma.idCanso][idioma2].audio )
+
             arrLletra = cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].lletra
             console.log( "arrLletra", arrLletra)
 
@@ -212,7 +228,7 @@ export default defineComponent({
               return ""
           }
         })())
-        store.guardaTitol(cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].titol)
+        store.guardaTitol( cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].titol)
         store.guardaAudio ( cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].audio )
 
         arrLletra = cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].lletra
