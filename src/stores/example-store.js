@@ -36,12 +36,16 @@ export const useCansoStore = defineStore('canso', {
     guardaCansonerBV( text ) { this.cansonerBV = text },
     guardaNumeroBV ( num ) { this.numeroBV = num },
 
-    guardaAcords ( acordsCopiats ) { this.acords = acordsCopiats },
+    guardaAcords ( acordsCopiats ) { this.acords = JSON.parse(JSON.stringify(acordsCopiats)) },
     eliminaAcords ( idxEstrofa, idxLinia, acordsASobreASota ) { delete this.lletra[idxEstrofa].paragraf[idxLinia][acordsASobreASota] },
 
     guardaTextLletra(text) { this.textLletra = text },
     guardaArrLletra(arr) { this.lletra = arr },
-    modificarLletraAcordsEditat (obj) { this.objLletraAcordsEditat = obj },
+    modificarLletraAcordsEditat (obj) { 
+			console.log("estic a MODIFICAR_LLETRA_ACORDS_EDITAT")
+			console.log( "obj", obj)
+			this.objLletraAcordsEditat = JSON.parse(JSON.stringify( obj )) 
+		},
     guardarLletraAcords(idxEstrofa, idxLinia) {
       console.log("Estic a guardarLletraAcords del STORE")
       console.log( "idxEstrofa", idxEstrofa)

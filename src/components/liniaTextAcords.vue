@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, watch } from 'vue'
 import cmp_assignacioNotes from './assignacioNotes.vue'
 import { useCansoStore } from '../stores/example-store'
 import { useQuasar } from 'quasar'
@@ -160,6 +160,8 @@ export default defineComponent({
     const idxLinia = props.idxLinia
 
     const textAmbEspais = computed ( () => linia.value.text.replaceAll(" ", "&nbsp;"))
+
+
 
     const acordsTextASobre = computed ( () => {
       return transformarArrayAcordsAText( linia.value.acordsASobre )
@@ -202,6 +204,19 @@ export default defineComponent({
         return null
       }
     }
+
+		watch( linia, (newT, oldT) => {
+			console.log("--- WATCH linia.text---")
+
+			console.log('newT.text', newT.text)
+
+			const obj = {}
+			obj.text = newT.text
+			if (linia.value.acordsASobre) obj.acordsASobre = linia.value.acordsASobre
+			if (linia.value.acordsASota) obj.acordsASota = linia.value.acordsASota
+
+			store.modificarLletraAcordsEditat( JSON.parse(JSON.stringify(obj)) )
+		}, { deep: true })
 
 
     const mGuardarLletraAcords = () => {

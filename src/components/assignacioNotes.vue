@@ -337,10 +337,10 @@
         // console.log(notesAssignades.value)
         const obj = {}
         obj.text = linia.value.text
-        if (notesAssignadesASobre.value.length !== 0) obj.acordsASobre = notesAssignadesASobre.value
-        if (notesAssignadesASota.value.length !== 0) obj.acordsASota = notesAssignadesASota.value
+        if (notesAssignadesASobre.value.length !== 0) obj.acordsASobre = JSON.parse(JSON.stringify(notesAssignadesASobre.value))
+        if (notesAssignadesASota.value.length !== 0) obj.acordsASota = JSON.parse(JSON.stringify(notesAssignadesASota.value))
 
-        store.modificarLletraAcordsEditat( obj )
+        store.modificarLletraAcordsEditat( JSON.parse(JSON.stringify(obj)) )
       }, { deep: true })
 
 
@@ -349,10 +349,10 @@
         // console.log(notesAssignades.value)
         const obj = {}
         obj.text = linia.value.text
-        if (notesAssignadesASobre.value.length !== 0) obj.acordsASobre = notesAssignadesASobre.value
-        if (notesAssignadesASota.value.length !== 0) obj.acordsASota = notesAssignadesASota.value
+        if (notesAssignadesASobre.value.length !== 0) obj.acordsASobre = JSON.parse(JSON.stringify(notesAssignadesASobre.value))
+        if (notesAssignadesASota.value.length !== 0) obj.acordsASota = JSON.parse(JSON.stringify(notesAssignadesASota.value))
 
-        store.modificarLletraAcordsEditat( obj )
+        store.modificarLletraAcordsEditat( JSON.parse(JSON.stringify(obj)) )
       }, { deep: true })
 
 
