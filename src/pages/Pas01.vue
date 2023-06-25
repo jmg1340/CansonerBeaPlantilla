@@ -40,8 +40,8 @@
 			<q-card-section>
 				<div>Tria cançoner:</div>
 				<div class="column q-gutter-sm">
-					<q-select class="col" dense outlined v-model="cansonerBV" :options="[{'label': 'BLAU', 'value': 'blau'},{'label': 'VERMELL', 'value': 'vermell'}]" label="Cansoner BLAU - VERMELL" @update:model-value="store.guardaCansonerBV(cansoner)"/>
-					<q-input class="col" dense type="number" filled v-model="numero" label="numero de la cançó:" @update:model-value="store.guardaNumeroBV(numero)"/>
+					<q-select class="col" dense outlined v-model="cansonerBV" :options="[{'label': 'BLAU', 'value': 'blau'},{'label': 'VERMELL', 'value': 'vermell'}]" label="Cansoner BLAU - VERMELL" @update:model-value="store.guardaCansonerBV(cansonerBV)"/>
+					<q-input class="col" dense type="number" filled v-model="numeroBV" label="numero de la cançó:" @update:model-value="store.guardaNumeroBV(numeroBV)"/>
 
 					<q-btn class="col" label="Importar" dense color="green" noCaps @click="importarCanso()"/>
 				</div>
@@ -72,12 +72,13 @@ export default defineComponent({
     const store = useCansoStore()
 
     const cansonerBV = ref(store.cansonerBV)
-    const numero = ref(store.numeroBV)		
+    const numeroBV = ref(store.numeroBV)		
 		
 		const activarImportar = ref(false)
 
     const importarCanso = () => {
       const objDades = cansonerBVDadesAdaptades()
+      // console.log( 'objDades', objDades)
 
       const arrNum_Idioma = Object.keys( objDades ).map( elem => {
         const arr = elem.split("_")
@@ -87,7 +88,7 @@ export default defineComponent({
 
 
       // busquem per numero
-      let arrTrobat = arrNum_Idioma.filter( arr => arr[0] == numero.value  )
+      let arrTrobat = arrNum_Idioma.filter( arr => arr[0] == numeroBV.value  )
       console.log( "arrTrobat", arrTrobat, "arrTrobat.length", arrTrobat.length)
 
       let arrLletra = []
@@ -112,9 +113,9 @@ export default defineComponent({
                 { label: "Castellà", value: "ES" }
               ]
             },
-            cancel: false,
+            cancel: true,
             stackButtons: true,
-            persistent: true
+            persistent: false
           })
           .onOk(data => {
             let idioma2 = data;
@@ -124,7 +125,14 @@ export default defineComponent({
             console.log( "idCansoIdioma", idCansoIdioma)
 
             store.guardaCansoner(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.nom)
+            store.guardaCansonerBV(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.nom)
+            cansoner.value = store.cansoner
+            console.log( 'cansoner.value', cansoner.value)
+            
             store.guardaNumeroCanso(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.numero)
+            store.guardaNumeroBV(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.numero)
+            numeroCanso.value = store.numeroCanso
+            
             store.guardaIdioma( (() => {
               switch ( idioma2 ){
                 case "CAT":
@@ -135,8 +143,15 @@ export default defineComponent({
                   return ""
               }
             })() )
+            idioma.value = store.idioma
+
+
+
             store.guardaTitol( cansonerBVjs[idCansoIdioma.idCanso][idioma2].titol)
-            store.guardaAudio ( cansonerBVjs[idCansoIdioma.idCanso][idioma2].audio )
+            titol.value = store.titol
+
+            if ( cansonerBVjs[idCansoIdioma.idCanso][idioma2].audio)
+              store.guardaAudio ( cansonerBVjs[idCansoIdioma.idCanso][idioma2].audio )
 
             arrLletra = cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].lletra
             console.log( "arrLletra", arrLletra)
@@ -157,7 +172,9 @@ export default defineComponent({
         console.log( "idCansoIdioma", idCansoIdioma)
 
         store.guardaCansoner(cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].cansoner.nom)
+        cansoner.value = store.cansoner
         store.guardaNumeroCanso(cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].cansoner.numero)
+        numeroCanso.value = store.numeroCanso
         store.guardaIdioma( (() => {
           switch ( idCansoIdioma.idioma ){
             case "CAT":
@@ -168,8 +185,13 @@ export default defineComponent({
               return ""
           }
         })())
+        idioma.value = store.idioma
+
         store.guardaTitol( cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].titol)
-        store.guardaAudio ( cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].audio )
+        titol.value = store.titol
+
+        if (cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].audio)
+          store.guardaAudio ( cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].audio )
 
         arrLletra = cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].lletra
         console.log( "arrLletra", arrLletra)
@@ -178,6 +200,8 @@ export default defineComponent({
 
       }
 
+
+      activarImportar.value = false
     }
 
 
@@ -193,7 +217,7 @@ export default defineComponent({
       for (let idCanso in cansonerBVjs) {
         Object.keys(cansonerBVjs[idCanso]).forEach( function(idioma, index, array) {
           // console.log( idCanso, idioma, cansoner.nom, cansoner.value)
-          if ( cansonerBVjs[idCanso][idioma].cansoner.nom == cansoner.value.value ) {
+          if ( cansonerBVjs[idCanso][idioma].cansoner.nom == cansonerBV.value.value ) {
 
             // Al haver cançons que tenen mateix mateix numero i mateix cansoner, la següent expressio
             // ja no em serveix, ja que no poden haver propietats duplicades. Nomes agafaria una de les 2 cançons (la última)
@@ -214,6 +238,24 @@ export default defineComponent({
     }
 
 
+    // ---- cosntruccio del txt que anirà al txtAreaLletra ----
+    const construccioTxtArea = (arrLletra) => {
+      let txt = ""
+
+      arrLletra.forEach( estrofa => {
+        if ( estrofa.tipus === "tornada") txt += "\nt\n"
+
+        estrofa.paragraf.forEach( linia => {
+          txt += linia + "\n"
+        })
+        txt += "\n"
+
+      })
+
+      // txtAreaLletra.value = txt.trim()
+      store.guardaTextLletra(txt.trim())
+    }
+
 
 
 
@@ -227,7 +269,7 @@ export default defineComponent({
     const audio = ref(store.audio)
 
 
-    return {cansoner, numeroCanso, titol, audio, idioma, store, importarCanso, activarImportar, cansonerBV, numero}
+    return {cansoner, numeroCanso, titol, audio, idioma, store, importarCanso, activarImportar, cansonerBV, numeroBV}
   }
 
 

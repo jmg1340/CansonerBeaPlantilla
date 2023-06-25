@@ -87,24 +87,6 @@ export default defineComponent({
 
 
 
-    // ---- cosntruccio del txt que anirà al txtAreaLletra ----
-    const construccioTxtArea = (arrLletra) => {
-      let txt = ""
-
-      arrLletra.forEach( estrofa => {
-        if ( estrofa.tipus === "tornada") txt += "\nt\n"
-
-        estrofa.paragraf.forEach( linia => {
-          txt += linia + "\n"
-        })
-        txt += "\n"
-
-      })
-
-      txtAreaLletra.value = txt.trim()
-      store.guardaTextLletra(txt.trim())
-    }
-
 
 
 
@@ -192,9 +174,6 @@ export default defineComponent({
       // opcioEtiqPRE,
       store,
 
-      numero,
-      cansoner,
-      importarCanso
     }
   }
 })
