@@ -22,7 +22,7 @@
 
 
 
-  <div class="column items-center">
+  <div class="column ">
     <div class="col">
       <q-card v-for="(objEstrofa, index) in lletra" :key="index" class="q-pa-md q-mb-md">
         <cmp_Estrofa :estrofa="objEstrofa" :idxEstrofa="index" />

@@ -8,13 +8,13 @@
     <div v-if="linia.acordsASobre && linia.acordsASota" class="col lletraAmpladaFixe" >
       <!-- ACORDS PER SOBRE-->
       <div class="row no-wrap">
-        <q-btn color="yellow-3" text-color="black" label="copia" class="col-2" dense size="xs" @click="store.guardaAcords(linia.acords)"/>
+        <q-btn color="yellow-3" text-color="black" label="copia" class="col-1" dense size="xs" @click="store.guardaAcords(linia.acords)"/>
         <div v-html="acordsTextASobre" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords('acordsASobre')"/>
       </div>
 
       <!-- LLETRA -->
       <div class="row no-wrap">
-        <div class="col-2">&nbsp;</div>
+        <div class="col-2"></div>
         <div class="col-auto text-bold q-ml-md" v-html="textAmbEspais" @click="activarRegistreAcords = true"/>
       </div>
 
@@ -33,7 +33,7 @@
    <div v-else-if="linia.acordsASobre" class="col lletraAmpladaFixe" >
       <!-- ACORDS PER SOBRE-->
       <div class="row no-wrap">
-        <q-btn color="yellow-3" text-color="black" label="copia" class="col-2" dense size="xs" @click="store.guardaAcords(linia.acordsASobre)"/>
+        <q-btn color="yellow-3" text-color="black" label="copia" class="col-1" dense size="xs" @click="store.guardaAcords(linia.acordsASobre)"/>
         <div v-html="acordsTextASobre" class="col-auto q-ml-md text-blue text-bold" @dblclick="eliminarAcords('acordsASobre')"/>
       </div>
 
@@ -70,8 +70,8 @@
 
       <!-- LLETRA SENSE ACORDS -->
       <div class="row no-wrap">
-        <q-btn color="light-green-11" text-color="black" label="pega" class="col-2" dense size="xs" @click="linia.acordsASobre=store.acords" :disable="store.acords == null"/>
-        <div class="col-auto q-ml-md" @click="activarRegistreAcords = true">{{ linia.text}}</div>
+        <q-btn color="light-green-11" text-color="black" label="pega" class="col-1" dense size="xs" @click="linia.acordsASobre=store.acords" :disable="store.acords == null || tipus === 'anotacio'"/>
+        <div class="col-auto q-ml-md" :class="{'text-grey-6': tipus === 'anotacio'}" @click="activarRegistreAcords = (tipus !== 'anotacio')">{{ linia.text}}</div>
       </div>
 
     </div>
@@ -140,6 +140,10 @@ export default defineComponent({
       type: Object,
       required: true
     },
+    tipus: {
+      type: String,
+      required: true
+    },
   },
 
   setup( props ){
@@ -158,6 +162,7 @@ export default defineComponent({
     const linia = ref(props.linia)
     const idxEstrofa = props.idxEstrofa
     const idxLinia = props.idxLinia
+    const tipus = props.tipus
 
     const textAmbEspais = computed ( () => linia.value.text.replaceAll(" ", "&nbsp;"))
 
@@ -235,6 +240,7 @@ export default defineComponent({
     }
 
     return {
+      tipus,
       linia,
       textAmbEspais,
       acordsTextASobre,

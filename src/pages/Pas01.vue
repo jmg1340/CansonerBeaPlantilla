@@ -11,16 +11,16 @@
 			<div class="row justify-center">			
         <div class="col-6 q-mt-xl">
           <div class="column q-gutter-md">
+            <q-select dense outlined v-model="idioma" :options="['ES', 'CAT', 'ANG', 'FRA', 'ITA']" label="Idioma" @update:model-value="store.guardaIdioma(idioma)"/>
             <q-input class="col" filled v-model="cansoner" label="Cançoner:" @update:model-value="store.guardaCansoner(cansoner)"/>
 
-            <q-input class="col" filled v-model="numeroCanso" label="Número de la cançó (si no es una nova cançó):" @update:model-value="store.guardaNumeroCanso(numeroCanso)"/>
+            <q-input class="col" filled v-model="numeroCanso" label="Número de la cançó (si no es una nova cançó):" type="number" @update:model-value="store.guardaNumeroCanso(numeroCanso)"/>
 
             <!-- <q-input class="col" filled v-model="idioma" label="Idioma de la cançó:" @update:model-value="store.guardaIdioma(idioma)"/> -->
-            <q-select dense outlined v-model="idioma" :options="['castella', 'catala', 'angles', 'frances']" label="Idioma" @update:model-value="store.guardaIdioma(idioma)"/>
 
             <q-input class="col q-mb-md" filled v-model="titol" label="Titol de la cançó:" @update:model-value="store.guardaTitol(titol)"/>
 
-            <!-- <q-input class="col q-mb-md" filled v-model="audio" label="Audio:" @update:model-value="store.guardaAudio(audio)"/> -->
+            <q-input class="col q-mb-md" filled v-model="audio" label="Audio:" @update:model-value="store.guardaAudio(audio)"/>
 
           </div>
 
@@ -40,7 +40,7 @@
 			<q-card-section>
 				<div>Tria cançoner:</div>
 				<div class="column q-gutter-sm">
-					<q-select class="col" dense outlined v-model="cansonerBV" :options="[{'label': 'BLAU', 'value': 'blau'},{'label': 'VERMELL', 'value': 'vermell'}]" label="Cansoner BLAU - VERMELL" @update:model-value="store.guardaCansonerBV(cansonerBV)"/>
+					<q-select class="col" dense outlined v-model="cansonerBV" :options="[{'label': 'BLAU', 'value': 'Blau'},{'label': 'VERMELL', 'value': 'Vermell'}]" label="Cansoner BLAU - VERMELL" @update:model-value="store.guardaCansonerBV(cansonerBV)"/>
 					<q-input class="col" dense type="number" filled v-model="numeroBV" label="numero de la cançó:" @update:model-value="store.guardaNumeroBV(numeroBV)"/>
 
 					<q-btn class="col" label="Importar" dense color="green" noCaps @click="importarCanso()"/>
@@ -63,6 +63,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
+import { useQuasar } from 'quasar'
 import { useCansoStore } from '../stores/example-store'
 import cansonerBVjs from '../assets/cansoner'
 
@@ -70,37 +71,75 @@ export default defineComponent({
 
   setup(){
     const store = useCansoStore()
+    const $q = useQuasar()
 
     const cansonerBV = ref(store.cansonerBV)
-    const numeroBV = ref(store.numeroBV)		
-		
+    const numeroBV = ref(store.numeroBV)	
+
+    const cansoner = ref(store.cansoner)
+    const numeroCanso = ref(store.numeroCanso)
+    const idioma = ref(store.idioma)
+    const titol = ref(store.titol)
+    const audio = ref(store.audio)		
 		const activarImportar = ref(false)
 
     const importarCanso = () => {
-      const objDades = cansonerBVDadesAdaptades()
-      // console.log( 'objDades', objDades)
 
-      const arrNum_Idioma = Object.keys( objDades ).map( elem => {
-        const arr = elem.split("_")
-        return [ parseInt(arr[0]), arr[1]]
-      })
-      console.log( "arrNumIdioma", arrNum_Idioma)
-
-
-      // busquem per numero
-      let arrTrobat = arrNum_Idioma.filter( arr => arr[0] == numeroBV.value  )
-      console.log( "arrTrobat", arrTrobat, "arrTrobat.length", arrTrobat.length)
-
-      let arrLletra = []
+      console.log( "cansonerBV", cansonerBV.value.value)
+      console.log( "numeroBV", numeroBV.value )
+      
+      
+      const arr = store.arrDadesBasiquesCansons.filter( (c) => c.cansonerNom === cansonerBV.value.value && c.numero == numeroBV.value )
+      console.log( "arr", arr)
 
 
-      let idCansoIdioma = {}
+      let arrLletra = null
+      switch ( arr.length ) {
+        case 0:
+          $q.notify(`No existeix la cançó numero ${numeroBV.value} en el cançoner '${cansonerBV.value.value}'`)
+          break
+        case 1:
+          // s'ha trobat un resultat (un unic idioma)
 
-      if (arrTrobat.length === 2){
-        // Els 2 idiomes tenen assignat el mateix numero de canço. Preguntar importar la canço de quin idioma
+          store.guardaCansoner(arr[0].cansonerNom)
+          cansoner.value = store.cansoner
+          store.guardaNumeroCanso(arr[0].numero)
+          numeroCanso.value = store.numeroCanso
+          store.guardaIdioma( arr[0].idioma)
+          idioma.value = store.idioma
 
-        $q
-          .dialog({
+          store.guardaTitol( arr[0].titol)
+          titol.value = store.titol
+
+          const cansoCansonerUnic = store.cansonerUnic.find( obj => obj.id == arr[0].id ).idiomes[idioma.value]
+          console.log( "cansoCansonerUnic", cansoCansonerUnic )
+
+// https://docs.google.com/uc?export=&id=1CL2N99JYkF-ii8KOjBynXf6cJ43w5Kzj          
+
+          if ( arr[0].audio){
+            store.guardaAudio ( cansoCansonerUnic.audio[0].src.substring(38,72) )
+            audio.value = store.audio
+          } else {
+            store.guardaAudio ( null )
+            audio.value = store.audio
+          }
+          arrLletra = cansoCansonerUnic.lletra
+          console.log( "arrLletra", arrLletra)
+          store.guardaArrLletra(arrLletra)
+
+          construccioTxtArea (arrLletra)
+
+
+
+
+
+          break
+        default:
+          // s'ha trobat més d'un resultat ( 2 idiomes tenen mateix cansoner i numero )
+
+          const arrIdiomesaTriar = arr.map( o => ( { label: o.idioma, value: o.idioma } ) )
+
+          $q.dialog({
             title:
               "La següent cançó te mateix cançoner i número de cançó per cada idioma. Quin idioma vols veure ?",
             //message: 'Tria idioma:',
@@ -108,97 +147,69 @@ export default defineComponent({
               type: "radio",
               model: null,
               // inline: true,
-              items: [
-                { label: "Català", value: "CAT", color: "secondary" },
-                { label: "Castellà", value: "ES" }
-              ]
+              items: arrIdiomesaTriar
             },
             cancel: true,
             stackButtons: true,
-            persistent: false
+            persistent: true
           })
-          .onOk(data => {
-            let idioma2 = data;
-            arrTrobat = arrTrobat.filter( arr => arr[1] === idioma2)
+          .onOk( data =>   {
+            const idioma2 = data;
+            const arr2 = arr.filter( o => o.idioma === idioma2 )
+            console.log( "idioma", idioma)
 
-            idCansoIdioma = objDades[arrTrobat[0][0] + "_" + arrTrobat[0][1]]
-            console.log( "idCansoIdioma", idCansoIdioma)
-
-            store.guardaCansoner(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.nom)
-            store.guardaCansonerBV(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.nom)
+            store.guardaCansoner(arr2[0].cansonerNom)
             cansoner.value = store.cansoner
-            console.log( 'cansoner.value', cansoner.value)
+            console.log( "cansoner", cansoner.value)
             
-            store.guardaNumeroCanso(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.numero)
-            store.guardaNumeroBV(cansonerBVjs[idCansoIdioma.idCanso][idioma2].cansoner.numero)
+            store.guardaNumeroCanso(arr2[0].numero)
             numeroCanso.value = store.numeroCanso
+            console.log( "numeroCanso", numeroCanso.value)
             
-            store.guardaIdioma( (() => {
-              switch ( idioma2 ){
-                case "CAT":
-                  return "catala"; break;
-                case "ES":
-                  return "castella"; break;
-                default:
-                  return ""
-              }
-            })() )
+            console.log( "idioma", idioma2)
+            store.guardaIdioma(idioma2)
+            console.log("store.idioma", store.idioma )
             idioma.value = store.idioma
 
-
-
-            store.guardaTitol( cansonerBVjs[idCansoIdioma.idCanso][idioma2].titol)
+            store.guardaTitol( arr2[0].titol)
             titol.value = store.titol
 
-            if ( cansonerBVjs[idCansoIdioma.idCanso][idioma2].audio)
-              store.guardaAudio ( cansonerBVjs[idCansoIdioma.idCanso][idioma2].audio )
+            const cansoCansonerUnic = store.cansonerUnic.find( obj => obj.id == arr2[0].id ).idiomes[idioma.value]
+            console.log( "cansoCansonerUnic", cansoCansonerUnic )
 
-            arrLletra = cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].lletra
+          
+
+            if ( arr2[0].audio ){
+              store.guardaAudio ( cansoCansonerUnic.audio[0].src.substring(38,72) )
+              audio.value = store.audio
+            } else {
+              store.guardaAudio ( null )
+              audio.value = store.audio
+            }
+            arrLletra = cansoCansonerUnic.lletra
             console.log( "arrLletra", arrLletra)
+            store.guardaArrLletra(arrLletra)
 
             construccioTxtArea (arrLletra)
 
+
+            // activarImportar.value = false
+
+
+
+
+
+
+
+
+
+            // const obj = arr.find( o => o.idioma === idioma )
+            // router.push({ name: "canso", query: {  id: obj.id, idioma: obj.idioma, cansonerNom: obj.cansonerNom, cansonerNumero: obj.numero  } });
           })
-          .onCancel(() => {
-            // console.log('>>>> Cancel')
-          })
-          .onDismiss(() => {
-            // console.log('I am triggered on both OK and Cancel')
-          });
-
-      } else {
-
-        idCansoIdioma = objDades[arrTrobat[0][0] + "_" + arrTrobat[0][1]]
-        console.log( "idCansoIdioma", idCansoIdioma)
-
-        store.guardaCansoner(cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].cansoner.nom)
-        cansoner.value = store.cansoner
-        store.guardaNumeroCanso(cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].cansoner.numero)
-        numeroCanso.value = store.numeroCanso
-        store.guardaIdioma( (() => {
-          switch ( idCansoIdioma.idioma ){
-            case "CAT":
-              return "catala"; break;
-            case "ES":
-              return "castella"; break;
-            default:
-              return ""
-          }
-        })())
-        idioma.value = store.idioma
-
-        store.guardaTitol( cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].titol)
-        titol.value = store.titol
-
-        if (cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].audio)
-          store.guardaAudio ( cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].audio )
-
-        arrLletra = cansonerBVjs[idCansoIdioma.idCanso][idCansoIdioma.idioma].lletra
-        console.log( "arrLletra", arrLletra)
-
-        construccioTxtArea (arrLletra)
-
       }
+
+
+
 
 
       activarImportar.value = false
@@ -216,7 +227,8 @@ export default defineComponent({
 
       for (let idCanso in cansonerBVjs) {
         Object.keys(cansonerBVjs[idCanso]).forEach( function(idioma, index, array) {
-          // console.log( idCanso, idioma, cansoner.nom, cansoner.value)
+          // console.log( idCanso, idioma, cansoner.value)
+          console.log( cansonerBVjs[idCanso][idioma].cansoner.nom, cansonerBV.value.value)
           if ( cansonerBVjs[idCanso][idioma].cansoner.nom == cansonerBV.value.value ) {
 
             // Al haver cançons que tenen mateix mateix numero i mateix cansoner, la següent expressio
@@ -246,7 +258,7 @@ export default defineComponent({
         if ( estrofa.tipus === "tornada") txt += "\nt\n"
 
         estrofa.paragraf.forEach( linia => {
-          txt += linia + "\n"
+          txt += linia.text + "\n"
         })
         txt += "\n"
 
@@ -262,11 +274,7 @@ export default defineComponent({
 
 
 
-    const cansoner = ref(store.cansoner)
-    const numeroCanso = ref(store.numeroCanso)
-    const idioma = ref(store.idioma)
-    const titol = ref(store.titol)
-    const audio = ref(store.audio)
+
 
 
     return {cansoner, numeroCanso, titol, audio, idioma, store, importarCanso, activarImportar, cansonerBV, numeroBV}

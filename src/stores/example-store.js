@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import cansonerunic from "../assets/cansonerUnic"
 
 export const useCansoStore = defineStore('canso', {
   state: () => ({
@@ -7,7 +8,7 @@ export const useCansoStore = defineStore('canso', {
     numeroCanso: "",
     idioma: "",
     titol: "",
-    audio: null,
+    audio: "",
     textLletra: "",
     lletra: [],
     objLletraAcordsEditat: {},
@@ -15,11 +16,67 @@ export const useCansoStore = defineStore('canso', {
     cansonerBV: null,
     numeroBV: null,
 
-    acords: null
+    acords: null,
+
+
+    cansonerUnic: cansonerunic,
   }),
   getters: {
     // doubleCount: (state) => state.counter * 2,
-    getterLletra: (state) => state.lletra
+    getterLletra: (state) => state.lletra,
+    calculValorAudio ( state ) {
+      console.log("estic dins funcio audio")
+      if (state.audio === null) return null
+      if (state.audio.length === 0) {
+        return null
+      } else {
+        return [
+            {
+              src: "https://docs.google.com/uc?export=&id="+state.audio,
+              type: "audio/mp3"
+            }
+          ]
+      }
+    },
+
+    arrDadesBasiquesCansons: (state) => {
+      // [ id, idioma, cansonerNom, cansonerNumero ]
+      return state.cansonerUnic.reduce( (ac, c) => {
+        let arr = []
+
+        const arrIdiomes = Object.keys( c.idiomes )
+        arrIdiomes.forEach ( i => {
+          
+          const arrCansoners = Object.values( c.idiomes[i].cansoners )
+          arrCansoners.forEach ( cn => {
+            
+            const obj = {}
+            obj.id = c.id
+            obj.idioma = i
+            obj.titol = c.idiomes[i].titol
+
+            obj.cansonerNom = cn.nom
+            obj.numero = cn.numero
+            obj.estat = cn.estat
+
+            obj.audio = c.idiomes[i].hasOwnProperty('audio') && c.idiomes[i].audio !== null 
+            obj.acords = c.idiomes[i].lletra.some( estrofa => {
+              return estrofa.paragraf.some( ( linia ) => linia.hasOwnProperty('acordsASobre') ) 
+            })
+    
+
+            arr.push(obj)
+            
+          })
+
+        })
+
+        return [ ...ac, ...arr ]
+
+      }, [])
+    },
+
+
   },
   actions: {
     // increment() {
@@ -28,10 +85,11 @@ export const useCansoStore = defineStore('canso', {
 
 
     guardaCansoner(text) { this.cansoner = text },
-    guardaNumeroCanso(text) { this.numeroCanso = text },
+    guardaNumeroCanso(text) { this.numeroCanso = parseInt(text) },
     guardaIdioma(text) { this.idioma = text },
     guardaTitol(text) { this.titol = text },
-    guardaAudio(text) { (text == null || text == "") ? null : this.audio = text },
+    guardaAudio(text) {  this.audio = text },
+
 
     guardaCansonerBV( text ) { this.cansonerBV = text },
     guardaNumeroBV ( num ) { this.numeroBV = num },

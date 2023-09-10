@@ -37,7 +37,7 @@ CANÇONER:  {{ store.cansoner }}    -    Numero cançó: {{ store.numeroCanso }}
 
 
 <script>
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed, onMounted } from 'vue';
 import cmpParagraf from './paragraf.vue'
 import { useCansoStore } from '../stores/example-store'
 import { copyToClipboard } from 'quasar'
@@ -52,11 +52,35 @@ export default defineComponent({
 
 
     const objCanso = ref({})
-    objCanso.value[store.idioma] = {
-      titol: store.titol,
-      audio: store.audio,
-      lletra: store.lletra
+    objCanso.value[store.idioma] = {}
+    objCanso.value[store.idioma].titol = store.titol
+    objCanso.value[store.idioma].audio = store.calculValorAudio
+    objCanso.value[store.idioma].cansoners = []
+    objCanso.value[store.idioma].cansoners.push(
+      {
+        nom: store.cansoner,
+        numero: store.numeroCanso,
+        estat: null,   // "nova" || null
+      }
+    )
+    objCanso.value[store.idioma].lletra = store.lletra
+    
+    onMounted( () => {
+      lletraEliminarVegades()
+    })
+
+    const lletraEliminarVegades = () => {
+      return store.lletra.map( (obj) => {
+        if ( obj.vegades !== undefined && obj.vegades === 0)
+          delete obj.vegades
+
+        return obj
+
+      })
     }
+
+
+
 
     const modeCopiarJordi = ref(false)
 

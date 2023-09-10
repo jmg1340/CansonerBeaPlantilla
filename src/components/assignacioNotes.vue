@@ -26,7 +26,7 @@
         <div class="row q-mb-sm" style="cursor: default">
           <div
             v-for="(obj, index) in notes1"
-            :key="'nota'+index"
+            :key="'nota1'+index"
             class="col-auto clNotes q-pa-sm"
             :class="{'verd': obj.activat, 'gris': /b|#|mim|rem|lam|sim|fam/.test(obj.nom), 'q-ml-md': [2,6,9,12,15,19].includes(index) }"
             @click="activarDesactivar(obj)"
@@ -36,11 +36,11 @@
           </div>
         </div>
 
-      <!-- ******  NOTES 2 ****** -->
-      <div class="row q-mb-sm" style="cursor: default">
+        <!-- ******  NOTES 2 ****** -->
+        <div class="row q-mb-sm" style="cursor: default">
           <div
             v-for="(obj, index) in notes2"
-            :key="'nota'+index"
+            :key="'nota2'+index"
             class="col-auto clNotes q-pa-sm"
             :class="{'verd': obj.activat, 'gris': /b|#/.test(obj.nom), 'q-ml-md': [2,5,7,9,12,15].includes(index) }"
             @click="activarDesactivar(obj)"
@@ -50,11 +50,11 @@
           </div>
         </div>
 
-      <!-- ******  NOTES 3 ****** -->
-      <div class="row q-mb-sm" style="cursor: default">
+        <!-- ******  NOTES 3 ****** -->
+        <div class="row q-mb-sm" style="cursor: default">
           <div
             v-for="(obj, index) in notes3"
-            :key="'nota'+index"
+            :key="'nota3'+index"
             class="col-auto clNotes q-pa-sm"
             :class="{'verd': obj.activat, 'gris': /b|#/.test(obj.nom)}"
             @click="activarDesactivar(obj)"
@@ -63,7 +63,24 @@
             {{ obj.nom }}
           </div>
         </div>
+
+        <!-- ******  NOTES 4 ****** -->
+        <div class="row q-mb-sm" style="cursor: default">
+          <div
+            v-for="(obj, index) in notes4"
+            :key="'nota4'+index"
+            class="col-auto clNotes q-pa-sm"
+            :class="{'verd': obj.activat, 'gris': /b|#/.test(obj.nom)}"
+            @click="activarDesactivar(obj)"
+          >
+            <!-- {{ (majuscules) ?  obj.nom.toUpperCase().replace("B", "b") : obj.nom.toLowerCase() }} -->
+            {{ obj.nom }}
+          </div>
+          
+        </div>
+
       </div>
+
 
 
 
@@ -208,10 +225,17 @@
         { nom: "LA#", activat: false},
         { nom: "LAb", activat: false},
         { nom: "SI", activat: false},
-        { nom: "SIb", activat: false}
+        { nom: "SIb", activat: false},
       ])
 
       const notes3 = ref([
+        { nom: "Do", activat: false},
+        { nom: "Re", activat: false},
+        { nom: "Mim", activat: false},
+        { nom: "Sim", activat: false}
+      ])
+
+      const notes4 = ref([
         { nom: "-", activat: false},
         { nom: "+", activat: false},
         { nom: "x", activat: false},
@@ -221,6 +245,7 @@
         { nom: "dism", activat: false},
         { nom: "G", activat: false},
         { nom: "M", activat: false},
+        { nom: "Ø", activat: false},
         { nom: "2", activat: false},
         { nom: "3", activat: false},
         { nom: "4", activat: false},
@@ -232,7 +257,7 @@
       ])
 
 
-      const notes = ref(notes1.value.concat(notes2.value.concat(notes3.value)))
+      const notes = ref(notes1.value.concat(notes2.value.concat(notes3.value.concat(notes4.value))))
 
 
       const linia = ref( props.linia )
@@ -365,7 +390,7 @@
 
 
 
-      return { notes1, notes2, notes3, linia, activarDesactivar, txtAcordsASobre, txtAcordsASota, assignarNota, eliminarNota }
+      return { notes1, notes2, notes3, notes4, linia, activarDesactivar, txtAcordsASobre, txtAcordsASota, assignarNota, eliminarNota }
     }
 
 

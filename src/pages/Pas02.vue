@@ -18,6 +18,7 @@
                   <li><span class="text-bold">Intro:</span> nova linia</li>
                   <li><span class="text-bold">Linia en blanc:</span> propera linia no en blanc -> nova estrofa</li>
                   <li><span class="text-bold">Linia amb només una "t":</span> la estrofa serà una tornada (estribill)</li>
+                  <li><span class="text-bold">Linia amb només una "a":</span> la estrofa serà una anotacio (que nomes serà visible quan estiguin activats els acords al cançoner)</li>
                 </ul>
               </q-tooltip>
             </div>
@@ -143,20 +144,35 @@ export default defineComponent({
 
       console.log("arrParagrafs", arrParagrafs)
 
+      const assignarTipus = ( lletra ) => {
+        switch ( lletra ){
+          case "a":
+            return "anotacio"; break
+          case "t":
+            return "tornada"; break
+          default:
+            return "estrofa"; break
+        }
+      }
 
       const arrLletra = arrParagrafs.map( arrParagraf => {
         let arrP = []
-        if (arrParagraf.length !== 0   &&   arrParagraf[0].text.toLowerCase() === "t" ){
+        if (arrParagraf.length !== 0   &&   ( arrParagraf[0].text.toLowerCase() === "t" || arrParagraf[0].text.toLowerCase() === "a")){
           arrP = arrParagraf.slice(1)   // el paragraf serà array a partir de la segona linia
         } else {
           arrP = arrParagraf
         }
 
         return {
-          tipus: (arrParagraf.length !== 0   &&   arrParagraf[0].text.toLowerCase() === "t") ? "tornada" : "estrofa" ,
+          // tipus: (arrParagraf.length !== 0   &&   arrParagraf[0].text.toLowerCase() === "t") ? "tornada" : "estrofa" ,
+          tipus: ( arrParagraf.length !== 0 ) ?  assignarTipus(arrParagraf[0].text.toLowerCase()) : "estrofa",
           visibleAlsMusics: true,
+          vegades: 0,    // vegades que es canta la estrofa / tornada
           paragraf: arrP
         }
+
+
+
       })
 
 
